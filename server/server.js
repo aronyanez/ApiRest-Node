@@ -1,47 +1,49 @@
 require('./config/config')
-const express = require('express')
-const app = express()
 
+const express = require('express')
+
+
+
+
+const app = express();
 
 const bodyParser = require('body-parser')
-const { response } = require('express')
+
+
+const mongoose = require('mongoose');
 
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-app.get('/usuario', function (req, res) {
-    res.json('')
-})
-app.post('/usuario', function (req, res) {
-    let body = req.body;
-
-    if (body.nombre === undefined)
-        res.status(400).json({
-            ok: false,
-            mensaje: 'El nombre es necesario'
+app.use(require('./routes/usuario'));
 
 
+(async () => {
+    try {
+        const conn = await mongoose.connect(process.env.URLDB, {
+
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+            useFindAndModify: false
         })
 
+        console.log('base de datos ONLINE');
+    } catch (err) {
+        console.log('No se pudo conectar', err);
+    }
+}
+)();
 
-    res.json({
-        body
-    })
-})
-app.put('/usuario/:id', function (req, res) {
-    let id = req.params.id;
-    res.json({ id })
-})
-app.delete('/usuario', function (req, res) {
-    res.json('')
-})
+
+
 
 app.listen(process.env.PORT, () => {
     console.log("Escuchando puerto: ", 3000)
-})
+});
 
 
