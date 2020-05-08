@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'dev')
 
 else
     
-    urlDB = "mongodb+srv://mongocafe:2xPs3v2uSSjGVzK9@cluster0-jeexb.mongodb.net/cafe?retryWrites=true&w=majority";
+    urlDB = process.env.MONGO_URI;
 
 process.env.URLDB = urlDB;
 
