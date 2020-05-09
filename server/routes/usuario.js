@@ -9,11 +9,11 @@ const _ = require('underscore')
 
 
 const bcrypt = require('bcrypt');
-const { request } = require('express');
+const { verificaToken, verificaAdminRole } = require('../middlewares/auth');
 
 
 
-app.get('/usuario', function (req, res) {
+app.get('/usuario', verificaToken, (req, res) => {
 
     let page = 1;
     let itemPerPage = 5;
@@ -28,7 +28,7 @@ app.get('/usuario', function (req, res) {
         limit: itemPerPage,
         sort: '_id'
     };
-    Usuario.paginate({ estado : true}, options, (err, usuarios) => {
+    Usuario.paginate({ estado: true }, options, (err, usuarios) => {
 
         if (err) {
             return res.status(400).json({
@@ -47,9 +47,9 @@ app.get('/usuario', function (req, res) {
 
 });
 
-app.post('/usuario', function (req, res) {
+app.post('/usuario', [verificaToken, verificaAdminRole], (req, res) => {
     let body = req.body;
-
+    console.log('req :>> ', req);
 
     let usuario = new Usuario({
         nombre: body.nombre,
@@ -86,7 +86,7 @@ app.post('/usuario', function (req, res) {
 });
 
 
-app.put('/usuario/:id', function (req, res) {
+app.put('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
     let id = req.params.id;
 
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado'])
@@ -117,7 +117,7 @@ app.put('/usuario/:id', function (req, res) {
 });
 
 
-app.delete('/usuario/:id', function (req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
     let id = req.params.id;
 
     let body = _.pick(req.body, ['estado'])
