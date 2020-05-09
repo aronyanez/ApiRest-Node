@@ -3,7 +3,7 @@ const express = require('express')
 
 const Usuario = require('../models/usuario')
 
-const app = express();
+let app = express();
 
 const _ = require('underscore')
 
@@ -49,7 +49,6 @@ app.get('/usuario', verificaToken, (req, res) => {
 
 app.post('/usuario', [verificaToken, verificaAdminRole], (req, res) => {
     let body = req.body;
-    console.log('req :>> ', req);
 
     let usuario = new Usuario({
         nombre: body.nombre,
@@ -60,6 +59,13 @@ app.post('/usuario', [verificaToken, verificaAdminRole], (req, res) => {
     });
 
 
+    if (body.nombre === undefined)
+        res.status(400).json({
+            ok: false,
+            mensaje: 'El nombre es necesario'
+
+
+        })
     usuario.save((err, usuarioDB) => {
 
         if (err) {
@@ -76,13 +82,6 @@ app.post('/usuario', [verificaToken, verificaAdminRole], (req, res) => {
 
     });
 
-    if (body.nombre === undefined)
-        res.status(400).json({
-            ok: false,
-            mensaje: 'El nombre es necesario'
-
-
-        })
 });
 
 
