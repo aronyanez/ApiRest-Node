@@ -51,7 +51,7 @@ app.get('/categoria/:id', verificaToken, (req, res) => {
     let id = req.params.id;
 
 
-    Categoria.findById(id, (err, categoria) => {
+    Categoria.findById(id, (err, categoriaDB) => {
 
 
         if (err) {
@@ -71,7 +71,7 @@ app.get('/categoria/:id', verificaToken, (req, res) => {
 
         res.json({
             ok: true,
-            categoria
+            categoria:categoriaDB
         })
 
     });
